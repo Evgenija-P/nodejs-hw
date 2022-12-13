@@ -26,8 +26,8 @@ async function removeContact(id) {
   const idFind = contacts.findIndex((contact) => contact.id === id);
 
   if (idFind !== -1) {
-    const newContacts = contacts.filter((_, index) => index !== idFind);
-    await fs.writeFile(contactsPath, JSON.stringify(newContacts));
+    const deleteContact = contacts.filter((_, index) => index !== idFind);
+    await fs.writeFile(contactsPath, JSON.stringify(deleteContact));
   }
   return contacts[idFind];
 }
@@ -41,12 +41,13 @@ async function addContact({ name, email, phone }) {
   return contactNew;
 }
 
-async function updateContact(contactId, dataUpdate) {
-  const findId = String(contactId);
+async function updateContact(id, dataUpdate) {
+  const findId = String(id);
+  console.log(findId);
   const data = await fs.readFile(contactsPath);
   const contacts = JSON.parse(data);
   const idFind = contacts.findIndex((contact) => contact.id === findId);
-  contacts[idFind] = { contactId, ...dataUpdate };
+  contacts[idFind] = { id, ...dataUpdate };
   await fs.writeFile(contactsPath, JSON.stringify(contacts));
   if (idFind === -1) {
     return null;
