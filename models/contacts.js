@@ -11,10 +11,9 @@ async function listContacts() {
 }
 
 async function getContactById(contactId) {
+  const findId = String(contactId);
   const data = await fs.readFile(contactsPath);
-  const contactFind = JSON.parse(data).find(
-    (contact) => contact.id === contactId
-  );
+  const contactFind = JSON.parse(data).find((contact) => contact.id === findId);
   if (!contactFind) {
     return null;
   }
@@ -42,16 +41,15 @@ async function addContact({ name, email, phone }) {
   return contactNew;
 }
 
-async function updateContact(id, { name, email, phone }) {
+async function updateContact(contactId, dataUpdate) {
+  const findId = String(contactId);
   const data = await fs.readFile(contactsPath);
   const contacts = JSON.parse(data);
-  const idFind = contacts.findIndex((contact) => contact.id === id);
-  if (idFind !== -1) {
-    contacts[idFind].name = name;
-    contacts[idFind].email = email;
-    contacts[idFind].phone = phone;
-
-    await fs.writeFile(contactsPath, JSON.stringify(contacts));
+  const idFind = contacts.findIndex((contact) => contact.id === findId);
+  contacts[idFind] = { contactId, ...dataUpdate };
+  await fs.writeFile(contactsPath, JSON.stringify(contacts));
+  if (idFind === -1) {
+    return null;
   }
   return contacts[idFind];
 }
