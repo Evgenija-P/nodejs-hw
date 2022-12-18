@@ -1,7 +1,7 @@
-const contactsMethods = require("../../models/contacts");
+const { Contact } = require("../../models/contact");
 
-const listContacts = async (req, res) => {
-  const contactsList = await contactsMethods.listContacts();
+const listContacts = async (r_, res) => {
+  const contactsList = await Contact.find({}, "-createdAt, -updatedAt");
   res.json({
     ststaus: "success",
     code: 200,
