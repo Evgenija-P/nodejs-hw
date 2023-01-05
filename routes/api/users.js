@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 const { schemas } = require("../../models/user");
-const { auth: ctrl } = require("../../controllers");
+const { user: ctrl } = require("../../controllers");
 
 const {
   validation,
@@ -10,7 +10,7 @@ const {
 } = require("../../middlewares");
 
 router.post(
-  "/register",
+  "/signup",
   validation(schemas.registerSchema),
   ctrlWrapper(ctrl.register)
 );
