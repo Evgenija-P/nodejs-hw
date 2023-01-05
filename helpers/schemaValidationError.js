@@ -1,10 +1,14 @@
-const isConflict = ({ name, code }) =>
-  name === "MongoServerError" && code === 11000;
-
-const catchErrors = (error, data, next) => {
-  error.status = isConflict(error) ? 409 : 400;
-
-  next();
+const messages = {
+  400: "Bad Request",
+  401: "Unauthorized",
+  403: "Forbidden",
+  404: "Not found",
+  409: "Conflict",
 };
 
+const catchErrors = (status, message = messages[status]) => {
+  const error = new Error(message);
+  error.status = status;
+  return error;
+};
 module.exports = catchErrors;
