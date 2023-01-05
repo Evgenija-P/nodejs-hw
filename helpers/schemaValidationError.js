@@ -6,9 +6,10 @@ const messages = {
   409: "Conflict",
 };
 
-const catchErrors = (status, message = messages[status]) => {
+const schemaValidationError = (status, message = messages[status]) => {
   const error = new Error(message);
   error.status = status;
   return error;
 };
-module.exports = catchErrors;
+
+module.exports = schemaValidationError;

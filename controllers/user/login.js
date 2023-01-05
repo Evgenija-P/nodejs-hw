@@ -2,33 +2,40 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const { User } = require("../../models/user");
-const { catchErrors } = require("../../helpers");
+const { schemaValidationError } = require("../../helpers");
 
 const { SECRET_KEY } = process.env;
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const loginUser = await User.findOne({ email });
-  if (!loginUser) {
-    throw catchErrors(401, "Email or password invalid");
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw schemaValidationError(401, "Email or password is wrong");
   }
 
-  const passwordCompare = await bcrypt.compare(password, loginUser.password);
+  const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    throw catchErrors(401, "Email or password invalid");
+    throw schemaValidationError(401, "Email or password is wrong");
   }
 
   const payload = {
-    id: loginUser._id,
+    id: user._id,
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(user._id, { token });
 
-  res.status(201).json({
-    ststaus: "success",
-    code: 201,
+  res.status(200).json({
+    ststaus: "OK",
+    code: 200,
     message: "user logined",
-    data: { email: loginUser.email, token },
+    data: {
+      token,
+      user: {
+        email: user.email,
+        subscription: user.subscription,
+      },
+    },
   });
 };
 module.exports = login;

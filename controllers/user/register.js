@@ -1,14 +1,14 @@
 const bcrypt = require("bcryptjs");
 
 const { User } = require("../../models/user");
-const { catchErrors } = require("../../helpers");
+const { schemaValidationError } = require("../../helpers");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email });
   if (user) {
-    throw catchErrors(409, "Email in use");
+    throw schemaValidationError(409, "Email in use");
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
@@ -19,10 +19,15 @@ const register = async (req, res) => {
   });
 
   res.status(201).json({
-    ststaus: "success",
+    ststaus: "Created",
     code: 201,
     message: "user registered",
-    data: { registerUser },
+    data: {
+      registerUser: {
+        email: registerUser.email,
+        subscription: registerUser.subscription,
+      },
+    },
   });
 };
 

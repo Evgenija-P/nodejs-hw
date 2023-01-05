@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-const catchErrors = require("../helpers/schemaValidationError");
+const schemaValidationError = require("../helpers/schemaValidationError");
 
 const userSchema = new Schema(
   {
@@ -26,7 +26,7 @@ const userSchema = new Schema(
   { versionKey: false, timestamps: true }
 );
 
-userSchema.post("save", catchErrors);
+userSchema.post("save", schemaValidationError);
 
 const registerSchema = Joi.object({
   password: Joi.string().min(6).required(),
@@ -35,8 +35,13 @@ const registerSchema = Joi.object({
     .required(),
 });
 
+const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
+});
+
 const schemas = {
   registerSchema,
+  updateSubscriptionSchema,
 };
 
 const User = model("user", userSchema);

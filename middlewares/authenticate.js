@@ -17,15 +17,15 @@ const authenticate = async (req, res, next) => {
   try {
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id);
-    if (!user) {
-      next(schemaValidationError(401));
+    if (!user || !user.token || token !== String(user.token)) {
+      next(schemaValidationError(401, "Not authorized"));
     }
 
     req.user = user;
 
     next();
   } catch {
-    next(schemaValidationError(401));
+    next(schemaValidationError(401, "Not authorized"));
   }
 };
 
