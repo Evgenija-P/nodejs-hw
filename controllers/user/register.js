@@ -5,7 +5,7 @@ const { catchErrors } = require("../../helpers");
 
 const register = async (req, res) => {
   const { email, password } = req.body;
-  console.log(req.body);
+
   const user = await User.findOne({ email });
   if (user) {
     throw catchErrors(409, "Email in use");
@@ -22,7 +22,7 @@ const register = async (req, res) => {
     ststaus: "success",
     code: 201,
     message: "user registered",
-    data: { email: registerUser.email },
+    data: { registerUser },
   });
 };
 
