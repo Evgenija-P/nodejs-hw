@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 
 const { User } = require("../models/user");
 
-const { SECRET_KEY } = process.env;
+// const { SECRET_KEY } = process.env;
 
 const { schemaValidationError } = require("../helpers");
 
@@ -15,7 +15,7 @@ const authenticate = async (req, res, next) => {
   }
 
   try {
-    const { id } = jwt.verify(token, SECRET_KEY);
+    // const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findOne({ token });
     if (!user || !user.token || token !== String(user.token)) {
       next(schemaValidationError(401, "Not authorized"));
