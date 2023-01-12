@@ -8,7 +8,7 @@ const {
   validation,
   authenticate,
   ctrlWrapper,
-  upload /* isValidId */,
+  upload,
 } = require("../../middlewares");
 
 // register
@@ -25,10 +25,19 @@ router.post(
   ctrlWrapper(ctrl.login)
 );
 
+router.post("/logout", authenticate, ctrlWrapper(ctrl.logout));
+
+// verify
+router.post(
+  "/verify",
+  validation(schemas.verifyEmailSchema),
+  ctrlWrapper(ctrl.resendVerifyEmail)
+);
+
+router.get("/verify/:verificationToken", ctrlWrapper(ctrl.verifyEmail));
+
 // current
 router.get("/current", authenticate, ctrlWrapper(ctrl.getCurrent));
-
-router.post("/logout", authenticate, ctrlWrapper(ctrl.logout));
 
 // update
 router.patch(

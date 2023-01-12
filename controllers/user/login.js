@@ -18,6 +18,10 @@ const login = async (req, res) => {
     throw schemaValidationError(401, "Email or password is wrong");
   }
 
+  if (!user.verify) {
+    throw schemaValidationError(400, "Email not verify");
+  }
+
   const payload = {
     id: user._id,
   };
@@ -31,6 +35,7 @@ const login = async (req, res) => {
     message: "user logined",
     data: {
       token,
+      message: "Verification email sent",
       user: {
         email: user.email,
         subscription: user.subscription,
