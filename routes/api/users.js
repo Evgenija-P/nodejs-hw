@@ -7,7 +7,8 @@ const { user: ctrl } = require("../../controllers");
 const {
   validation,
   authenticate,
-  ctrlWrapper /* isValidId */,
+  ctrlWrapper,
+  upload /* isValidId */,
 } = require("../../middlewares");
 
 // register
@@ -35,6 +36,14 @@ router.patch(
   authenticate,
   validation(schemas.updateSubscriptionSchema),
   ctrlWrapper(ctrl.updateSubscription)
+);
+
+// avatar
+router.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  ctrlWrapper(ctrl.updateAvatar)
 );
 
 module.exports = router;
