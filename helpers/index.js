@@ -1,7 +1,9 @@
-// const RequestError = require("./RequestError");
 const schemaValidationError = require("./schemaValidationError");
+const sendEmail = require("./sendEmail");
+const SendEmailND = require("./SendEmailND");
 
 module.exports = {
-  // RequestError,
+  sendEmail,
+  SendEmailND,
   schemaValidationError,
 };
